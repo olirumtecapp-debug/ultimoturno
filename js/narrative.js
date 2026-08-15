@@ -87,55 +87,106 @@ O Sujeito 05 é o arquiteto do próprio sistema. Se ele se lembrar de sua funç�
     tape_01: {
       id: 'tape_01',
       audio: 'assets/audio/tape_01.mp3',
-      title: 'FITA 01 — O AVISO INICIAL',
-      speaker: 'VOZ DESCONHECIDA',
-      duration: '0:42',
-      transcript: `"Se você chegou até aqui... não continue. Você acha que está tentando escapar de um prédio trancado, mas as portas não são o seu verdadeiro problema. Cada sala que você abre é apenas uma camada mais profunda da sua própria negação."`
+      title: 'FITA 01 — REGISTRO DE OBSERVAÇÃO',
+      speaker: 'DR. VANCE',
+      duration: '0:55',
+      transcript: `"Gravação de registro... 14 de outubro. Se alguém encontrar esta fita... eu... eu ainda estou preso no Setor de Observação. As luzes de emergência caíram... e os terminais não respondem ao protocolo padrão. Tem algo no duto de ventilação... eu consigo ouvir o metal rangendo. O código de contenção primário precisa ser inserido antes que a pressão da câmara colapse! Não olhem diretamente para o visor da porta... por favor..."`
     },
-
     tape_02: {
       id: 'tape_02',
       audio: 'assets/audio/tape_02.mp3',
-      title: 'FITA 02 — O PADRÃO REPETITIVO',
+      title: 'FITA 02 — ISOLAMENTO MAGNÉTICO',
       speaker: 'DRA. HELENA MEYER',
-      duration: '0:38',
-      transcript: `"Você sempre faz isso... Toda vez que as luzes piscam e o relógio marca duas e dezessete, você acorda no chão, examina a mesa, atende o telefone... e começa a procurar as mesmas chaves que você mesmo escondeu."`
+      duration: '0:45',
+      transcript: `"Protocolo de segurança nível quatro ativado. O espécime quebrou o isolamento magnético às três da manhã. Nós tentamos reverter o fluxo pelo painel central, mas... os cartões magnéticos foram danificados. As chaves de acesso manuais foram divididas entre os armários do corredor B. Se você está ouvindo isso... não tente ligar os geradores principais de uma vez só. A sobrecarga vai trancar todas as saídas!"`
     },
-
     tape_03: {
       id: 'tape_03',
       audio: 'assets/audio/tape_03.mp3',
-      title: 'FITA 03 — A PORTA ERRADA',
-      speaker: 'DR. ARTHUR PENDELTON',
-      duration: '0:50',
-      transcript: `"Na primeira vez você abriu a porta errada. Você achou que estava salvando os outros quatro pesquisadores, mas você os trancou lá dentro. O experimento não falhou por causa do maquinário... Falhou por causa de uma escolha sua."`
+      title: 'FITA 03 — SALA DE ARQUIVOS',
+      speaker: 'DRA. CECÍLIA SANTOS',
+      duration: '0:48',
+      transcript: `"Eu tranquei a porta da sala de arquivos por dentro... mas a tranca... a tranca não vai aguentar muito tempo. A fita de áudio original revela que eles sabiam do risco desde o início. O código do cofre do laboratório está escondido atrás do diagrama na parede. Se você conseguir chegar até a saída de emergência... corte a energia do relé auxiliar primeiro. Eles... eles estão nos corredores..."`
     },
-
     tape_04: {
       id: 'tape_04',
       audio: 'assets/audio/tape_04.mp3',
-      title: 'FITA 04 — O BLOQUEIO DE MEMÓRIA',
-      speaker: 'DRA. CECÍLIA SANTOS',
-      duration: '0:45',
-      transcript: `"Você não deveria lembrar... Foi por isso que você programou o Instituto para apagar tudo a cada ciclo. Se a verdade vier à tona, a culpa será insuportável. Pare de procurar as gravações restantes."`
+      title: 'FITA 04 — CENTRAL DE SEGURANÇA',
+      speaker: 'OFICIAL DE SEGURANÇA',
+      duration: '0:38',
+      transcript: `"Central de segurança, último aviso! A evacuação falhou. Todas as portas corta-fogo foram seladas automaticamente pelo sistema central! A única rota restante é através do duto de manutenção da subestação. Você vai precisar do fusível de alta voltagem e da chave mestra do painel elétrico. Não confiem nos monitores de vídeo... o que aparece nas câmeras já não é mais deste lugar!"`
     },
-
     tape_05: {
       id: 'tape_05',
       audio: 'assets/audio/tape_05.mp3',
-      title: 'FITA 05 — A SALA 02:17',
-      speaker: 'DR. MARCUS WEBB',
-      duration: '0:40',
-      transcript: `"Se encontrar a sala das duas e dezessete, não entre. Ela contém a máquina de retorno. E se você olhar para a porta vermelha ao fundo do corredor... dê meia volta. O que está do outro lado daquele vidro não é uma pessoa."`
+      title: 'FITA 05 — CAIXA DE FUSÍVEIS',
+      speaker: 'DR. VANCE',
+      duration: '0:46',
+      transcript: `"Dia dois após o incidente. O oxigênio no nível inferior está diminuindo rápido demais. Consegui religar o primeiro disjuntor na caixa de fusíveis, mas o painel de sobrecarga requer uma sequência de quatro dígitos. A pista está no manual do turno da noite, na gaveta trancada da bancada. Não se aproximem do tanque de refrigeração... ele começou a vazar."`
     },
-
-    tape_own_voice: {
-      id: 'tape_own_voice',
-      audio: 'assets/audio/tape_own_voice.mp3',
-      title: 'FITA CONFIDENCIAL — REGISTRO DO PROTAGONISTA',
-      speaker: 'PROTAGONISTA (SUA PRÓPRIA VOZ)',
-      duration: '1:12',
-      transcript: `"(Som de respiração tensa e chiado analógico)... Meu Deus... eu estive aqui antes. Eu reconheço a minha própria letra no relatório. Eu não sou um prisioneiro tentando escapar... eu fui quem trancou este lugar. Se a minha versão futura estiver ouvindo isto: o quinto rosto na foto é o seu. Não confie na sua própria mente."`
+    tape_06: {
+      id: 'tape_06',
+      audio: 'assets/audio/tape_06.mp3',
+      title: 'FITA 06 — PULSO ELETROMAGNÉTICO',
+      speaker: 'DRA. HELENA MEYER',
+      duration: '0:35',
+      transcript: `"O comportamento do objeto mudou drasticamente. Ele não reage à luz ultravioleta como esperávamos... ele se alimenta do pulso eletromagnético da rede! Desliguem os monitores! Apaguem as luzes dos corredores! Ele se move nas sombras onde a eletricidade estática é mais densa..."`
+    },
+    tape_07: {
+      id: 'tape_07',
+      audio: 'assets/audio/tape_07.mp3',
+      title: 'FITA 07 — A NÉVOA CENTRAL',
+      speaker: 'DRA. CECÍLIA SANTOS',
+      duration: '0:42',
+      transcript: `"Se meu irmão encontrar este gravador... me perdoe. Nós fomos proibidos de registrar os sintomas... mas a névoa começou a entrar pela ventilação central. Meus dedos estão perdendo a sensibilidade. A combinação para a porta blindada é a data de fundação do complexo... não esqueça... mil novecentos e oitenta e..."`
+    },
+    tape_08: {
+      id: 'tape_08',
+      audio: 'assets/audio/tape_08.mp3',
+      title: 'FITA 08 — BLOCO C',
+      speaker: 'OFICIAL DE SEGURANÇA',
+      duration: '0:26',
+      transcript: `"Mayday! Mayday! Aqui é o posto avançado do Bloco C. Perdemos contato com a superfície! A trava hidráulica do elevador de serviço foi rompida de dentro para fora! Mantenham a barricada! Repito, mantenham a barricada!"`
+    },
+    tape_09: {
+      id: 'tape_09',
+      audio: 'assets/audio/tape_09.mp3',
+      title: 'FITA 09 — A ILUSÃO DO TEMPO',
+      speaker: 'DR. VANCE',
+      duration: '0:45',
+      transcript: `"Não era uma pesquisa médica. Nunca foi. O gás liberado nos dutos altera a percepção do tempo dos cobaias. Nós achamos que tínhamos entrado há apenas algumas horas... mas o calendário da parede diz que estamos aqui há semanas! Seus próprios olhos vão mentir para você... confie apenas no som do relógio!"`
+    },
+    tape_10: {
+      id: 'tape_10',
+      audio: 'assets/audio/tape_10.mp3',
+      title: 'FITA 10 — A CÂMARA PRINCIPAL',
+      speaker: 'DRA. HELENA MEYER',
+      duration: '0:32',
+      transcript: `"Para quem estiver vivo e chegou até a câmara principal: a chave de fenda e o cilindro de ar estão no armário médico do fundo. Para abrir a escotilha final do teto, você deve alinhar as três válvulas de pressão até o ponteiro estabilizar na faixa vermelha. Faça isso rápido... o tempo acabou."`
+    },
+    tape_11: {
+      id: 'tape_11',
+      audio: 'assets/audio/tape_11.mp3',
+      title: 'FITA 11 — ALERTA DA IA CENTRAL',
+      speaker: 'SISTEMA AURORA',
+      duration: '0:34',
+      transcript: `"Atenção. Violação de contenção biológica confirmada no Nível Três. Protocolo de purga térmica iniciado. Tempo restante estimado: dez minutos para o fechamento irreversível das comportas hidráulicas. Todos os funcionários devem se dirigir imediatamente à câmara de descompressão."`
+    },
+    tape_12: {
+      id: 'tape_12',
+      audio: 'assets/audio/tape_12.mp3',
+      title: 'FITA 12 — O ÚLTIMO REGISTRO',
+      speaker: 'DR. VANCE',
+      duration: '0:40',
+      transcript: `"Este é meu último registro. A lanterna está quase sem bateria... e a porta do gerador começou a ceder. Se você encontrou todas as fitas... pegue o cartão de acesso mestre no meu jaleco. Corra até a saída e nunca... sob hipótese alguma... olhe para trás. Boa sorte."`
+    },
+    tape_13: {
+      id: 'tape_13',
+      audio: 'assets/audio/tape_13.mp3',
+      title: 'FITA 13 — O ÚLTIMO TURNO',
+      speaker: 'DRA. CECÍLIA SANTOS',
+      duration: '0:30',
+      transcript: `"Você acha que conseguiu escapar... mas escute com atenção. O zumbido no fundo... a luz que nunca apaga de verdade... Nós nunca saímos da sala de observação. O último turno nunca termina..."`
     }
   },
 

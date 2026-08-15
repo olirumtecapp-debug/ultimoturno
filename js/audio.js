@@ -78,6 +78,19 @@ class SoundEngine {
     }
   }
 
+  // Gera curva de saturação analógica sutil para simular fita magnética
+  makeDistortionCurve(amount = 18) {
+    const k = typeof amount === 'number' ? amount : 18;
+    const n_samples = 44100;
+    const curve = new Float32Array(n_samples);
+    const deg = Math.PI / 180;
+    for (let i = 0; i < n_samples; ++i) {
+      const x = (i * 2) / n_samples - 1;
+      curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+    }
+    return curve;
+  }
+
   // ==========================================
   // REPRODUÇÃO EXCLUSIVA DE GRAVAÇÕES DIEGÉTICAS (FITAS & RÁDIO)
   // ==========================================
@@ -108,33 +121,27 @@ class SoundEngine {
       this.playTapeClickStart();
       this.startTapeHiss();
 
-      // Roteamento DSP pelo Web Audio API se disponível
+      // Roteamento DSP pelo Web Audio API (Filtro Bandpass 1400Hz + Saturação WaveShaper)
       if (this.ctx && this.ctx.state === 'running') {
         try {
           const source = this.ctx.createMediaElementSource(audio);
           this.voiceSourceNode = source;
 
-          // 1. Filtro Passa-Alta (Corta graves abaixo de 320Hz para efeito de rádio/fita)
-          const highpass = this.ctx.createBiquadFilter();
-          highpass.type = 'highpass';
-          highpass.frequency.setValueAtTime(320, this.ctx.currentTime);
+          // 1. Filtro Bandpass em 1400Hz (Q 1.2) para cortar graves profundos e agudos limpos
+          const bandpass = this.ctx.createBiquadFilter();
+          bandpass.type = 'bandpass';
+          bandpass.frequency.setValueAtTime(1400, this.ctx.currentTime);
+          bandpass.Q.setValueAtTime(1.2, this.ctx.currentTime);
 
-          // 2. Filtro Passa-Baixa (Corta agudos acima de 3400Hz simulando fita magnética envelhecida)
-          const lowpass = this.ctx.createBiquadFilter();
-          lowpass.type = 'lowpass';
-          lowpass.frequency.setValueAtTime(3400, this.ctx.currentTime);
+          // 2. WaveShaperNode para distorção/saturação analógica suave em picos de volume
+          const shaper = this.ctx.createWaveShaper();
+          shaper.curve = this.makeDistortionCurve(16);
+          shaper.oversample = '4x';
 
-          // 3. Pico de ressonância em 1400Hz (acústica de alto-falante antigo)
-          const peak = this.ctx.createBiquadFilter();
-          peak.type = 'peaking';
-          peak.frequency.setValueAtTime(1400, this.ctx.currentTime);
-          peak.gain.setValueAtTime(4.0, this.ctx.currentTime);
-          peak.Q.setValueAtTime(1.5, this.ctx.currentTime);
-
-          source.connect(highpass);
-          highpass.connect(lowpass);
-          lowpass.connect(peak);
-          peak.connect(this.voiceGain);
+          // Conexão em cascata: Fonte -> Bandpass -> WaveShaper -> VoiceGain
+          source.connect(bandpass);
+          bandpass.connect(shaper);
+          shaper.connect(this.voiceGain);
         } catch (dspErr) {
           // Fallback para volume direto se createMediaElementSource já estiver vinculado
           audio.volume = this.voiceVolume * this.masterVolume;
@@ -207,20 +214,22 @@ class SoundEngine {
       const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
       const output = noiseBuffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
-        output[i] = (Math.random() * 2 - 1) * 0.035; // Chiado sutil de fita
+        output[i] = (Math.random() * 2 - 1) * 0.04; // Ruído branco analógico
       }
 
       const whiteNoise = this.ctx.createBufferSource();
       whiteNoise.buffer = noiseBuffer;
       whiteNoise.loop = true;
 
+      // Filtro passa-faixa para simular ruído de cabeçote magnético
       const bandpass = this.ctx.createBiquadFilter();
       bandpass.type = 'bandpass';
-      bandpass.frequency.setValueAtTime(1800, this.ctx.currentTime);
+      bandpass.frequency.setValueAtTime(1400, this.ctx.currentTime);
       bandpass.Q.setValueAtTime(1.2, this.ctx.currentTime);
 
+      // Volume de 15% (0.15) enquanto a fita estiver ativa
       this.tapeHissGain = this.ctx.createGain();
-      this.tapeHissGain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      this.tapeHissGain.gain.setValueAtTime(0.15, this.ctx.currentTime);
 
       whiteNoise.connect(bandpass);
       bandpass.connect(this.tapeHissGain);

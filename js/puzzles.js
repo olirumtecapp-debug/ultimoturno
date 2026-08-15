@@ -325,14 +325,7 @@ class PuzzleSystem {
   openTapePlayerModal() {
     if (this.puzzleTitle) this.puzzleTitle.textContent = 'GRAVADOR & LEITOR DE FITAS MAGNÉTICAS';
 
-    const tapes = [
-      NARRATIVE_DATABASE.tapes.tape_01,
-      NARRATIVE_DATABASE.tapes.tape_02,
-      NARRATIVE_DATABASE.tapes.tape_03,
-      NARRATIVE_DATABASE.tapes.tape_04,
-      NARRATIVE_DATABASE.tapes.tape_05,
-      NARRATIVE_DATABASE.tapes.tape_own_voice
-    ];
+    const tapes = Object.values(NARRATIVE_DATABASE.tapes);
 
     let currentTape = tapes[0];
     let isPlaying = false;
@@ -349,10 +342,10 @@ class PuzzleSystem {
             <div class="cassette-reel"></div>
           </div>
 
-          <div style="display: flex; gap: 10px; justify-content: center;">
+          <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-height: 90px; overflow-y: auto; padding: 4px;">
             ${tapes.map((t, idx) => `
               <button class="retro-btn btn-sm ${currentTape.id === t.id ? 'btn-primary' : ''}" data-index="${idx}">
-                <span>FITA 0${idx + 1}</span>
+                <span>FITA ${String(idx + 1).padStart(2, '0')}</span>
               </button>
             `).join('')}
           </div>
