@@ -1,0 +1,331 @@
+/* ====================================================
+   O ÚLTIMO TURNO — CENÁRIOS FOTORREALISTAS EM PRIMEIRA PESSOA
+   Integração de Assets de Alta Fidelidade (16:9), Hotspots Diegéticos e Iluminação
+   ==================================================== */
+
+.scene-viewport {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #020305;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: crosshair;
+}
+
+.scene-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1920px;
+  max-height: 1080px;
+  background: #020305;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Canvas de Iluminação Volumétrica & Lanterna */
+.lighting-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* ====================================================
+   ESTRUTURA BASE DOS CENÁRIOS FOTORREALISTAS
+   ==================================================== */
+.realistic-room-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: filter 0.4s ease;
+}
+
+/* ====================================================
+   MAPEAMENTO DAS IMAGENS DE CENÁRIO POR CAPÍTULO
+   ==================================================== */
+
+/* Capítulo 1: O Despertar (Escritório / Sala de Investigação) */
+.room-cap1 {
+  background-image: url('../assets/images/scene_despertar.png');
+}
+
+/* Capítulo 2: O Corredor Industrial */
+.room-cap2 {
+  background-image: url('../assets/images/scene_corredor.png');
+}
+
+/* Capítulo 3: O Laboratório de Neurociência */
+.room-cap3 {
+  background-image: url('../assets/images/scene_laboratorio.png');
+}
+
+/* Capítulo 4: Setor de Arquivos Acústicos e Gravações */
+.room-cap4 {
+  background-image: url('../assets/images/scene_seguranca.png');
+}
+
+/* Capítulo 5: Câmara dos Relógios 02:17 */
+.room-cap5 {
+  background-image: url('../assets/images/scene_seguranca.png');
+  filter: contrast(1.1) brightness(0.9);
+}
+
+/* Capítulo 6: A Monumental Porta Vermelha (Exterior) */
+.room-cap6-outside {
+  background-image: url('../assets/images/scene_porta_vermelha.png');
+}
+
+/* Capítulo 6: O Espelho Embaçado (Interior) */
+.room-cap6-inside {
+  background-image: url('../assets/images/scene_espelho.png');
+}
+
+/* Capítulo 7: Sala dos Arquivos Confidenciais */
+.room-cap7 {
+  background-image: url('../assets/images/scene_laboratorio.png');
+  filter: sepia(0.2) contrast(1.15) brightness(0.85);
+}
+
+/* Capítulo 8: A Ponte Central do Sistema Aurora */
+.room-cap8 {
+  background-image: url('../assets/images/scene_ponte_comando.png');
+}
+
+/* Fundo do Menu Principal */
+.menu-backdrop {
+  background-image: url('../assets/images/scene_corredor.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  filter: brightness(0.7) contrast(1.1);
+}
+
+/* ====================================================
+   HOTSPOTS 100% DIEGÉTICOS (SEM CÍRCULOS NEON)
+   Interação realista através de silhueta (rim light) e cursor tático
+   ==================================================== */
+.scene-hotspot {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 6px;
+  background: transparent;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  z-index: 30;
+}
+
+/* Efeito de iluminação especular suave ao passar o cursor ou o feixe da lanterna */
+.scene-hotspot:hover {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 
+    0 0 20px rgba(255, 245, 220, 0.25),
+    inset 0 0 15px rgba(255, 255, 255, 0.1);
+  filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 240, 200, 0.4));
+  transform: scale(1.02);
+}
+
+/* Tooltip interno legado desativado em favor da barra central global (#action-prompt) */
+.hotspot-label {
+  display: none !important;
+}
+
+/* ====================================================
+   POSICIONAMENTO DOS HOTSPOTS SOBRE OS CENÁRIOS 16:9
+   ==================================================== */
+
+/* CAPÍTULO 1 (Escritório) */
+#hs-cap1-phone {
+  bottom: 22%;
+  left: 28%;
+  width: 140px;
+  height: 120px;
+}
+
+#hs-cap1-doc {
+  bottom: 4%;
+  left: 38%;
+  width: 190px;
+  height: 150px;
+}
+
+#hs-cap1-clock {
+  top: 14%;
+  right: 28%;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+}
+
+#hs-cap1-locker {
+  top: 10%;
+  left: 45%;
+  width: 110px;
+  height: 280px;
+}
+
+#hs-cap1-door {
+  top: 18%;
+  right: 3%;
+  width: 140px;
+  height: 380px;
+}
+
+/* CAPÍTULO 2 (Corredor) */
+#hs-cap2-breaker {
+  top: 24%;
+  left: 8%;
+  width: 180px;
+  height: 280px;
+}
+
+#hs-cap2-cctv {
+  top: 28%;
+  right: 10%;
+  width: 220px;
+  height: 220px;
+}
+
+#hs-cap2-door-lab {
+  top: 28%;
+  right: 30%;
+  width: 90px;
+  height: 260px;
+}
+
+#hs-cap2-door-red {
+  top: 40%;
+  left: 46%;
+  width: 90px;
+  height: 180px;
+}
+
+/* CAPÍTULO 3 (Laboratório) */
+#hs-cap3-bench {
+  bottom: 20%;
+  left: 8%;
+  width: 320px;
+  height: 180px;
+}
+
+#hs-cap3-doc {
+  bottom: 6%;
+  left: 48%;
+  width: 240px;
+  height: 140px;
+}
+
+#hs-cap3-terminal {
+  bottom: 15%;
+  right: 5%;
+  width: 340px;
+  height: 300px;
+}
+
+#hs-cap3-door-archive {
+  top: 25%;
+  left: 45%;
+  width: 110px;
+  height: 250px;
+}
+
+/* CAPÍTULO 4 (Gravações e Fitas) */
+#hs-cap4-player {
+  bottom: 18%;
+  left: 28%;
+  width: 420px;
+  height: 240px;
+}
+
+#hs-cap4-tape-shelf {
+  top: 15%;
+  left: 4%;
+  width: 200px;
+  height: 380px;
+}
+
+#hs-cap4-door-clocks {
+  top: 15%;
+  right: 28%;
+  width: 130px;
+  height: 340px;
+}
+
+/* CAPÍTULO 5 (Câmara 02:17) */
+#hs-cap5-clocks-panel {
+  top: 15%;
+  left: 4%;
+  width: 220px;
+  height: 360px;
+}
+
+#hs-cap5-secret-chamber {
+  bottom: 18%;
+  left: 28%;
+  width: 420px;
+  height: 240px;
+}
+
+/* CAPÍTULO 6 (A Porta Vermelha & Espelho) */
+#hs-cap6-red-door {
+  top: 22%;
+  left: 33%;
+  width: 440px;
+  height: 480px;
+}
+
+#hs-cap6-mirror {
+  top: 10%;
+  left: 28%;
+  width: 480px;
+  height: 460px;
+}
+
+#hs-cap6-phone {
+  top: 32%;
+  left: 14%;
+  width: 90px;
+  height: 180px;
+}
+
+#hs-cap6-door-truth {
+  top: 10%;
+  right: 4%;
+  width: 120px;
+  height: 380px;
+}
+
+/* CAPÍTULO 7 (A Verdade) */
+#hs-cap7-projector-screen {
+  bottom: 15%;
+  right: 5%;
+  width: 340px;
+  height: 300px;
+}
+
+#hs-cap7-door-final {
+  top: 25%;
+  left: 45%;
+  width: 110px;
+  height: 250px;
+}
+
+/* CAPÍTULO 8 (Ponte Central) */
+#hs-cap8-console {
+  bottom: 5%;
+  left: 35%;
+  width: 380px;
+  height: 240px;
+}

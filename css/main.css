@@ -1,0 +1,374 @@
+/* ====================================================
+   O ÚLTIMO TURNO — ESTILOS PRINCIPAIS & DESIGN SYSTEM
+   Layout 16:9 Responsivo, Ocupação Total da Janela, Sem Colapso
+   ==================================================== */
+
+:root {
+  /* Paleta de Cores Psicológicas */
+  --bg-abyss: #000000;
+  --bg-metal-dark: #090d12;
+  --bg-slate: #111720;
+  --bg-panel: #161f2c;
+  --bg-panel-light: #202b3c;
+  
+  --accent-midnight: #0a1b2a;
+  --accent-hospital-green: #142a20;
+  --accent-hospital-green-glow: #2bf79c;
+  --accent-sterile-white: #f0f6fc;
+  --accent-muted-gray: #8b949e;
+  --accent-dark-border: #283342;
+  
+  --alert-red: #ef4444;
+  --alert-red-glow: rgba(239, 68, 68, 0.6);
+  --alert-red-dark: #7f1d1d;
+  
+  --crt-green: #39ff14;
+  --crt-amber: #ffb703;
+  --crt-blue: #38bdf8;
+  
+  /* Tipografia */
+  --font-serif-title: 'Cinzel', Georgia, serif;
+  --font-mono-tech: 'JetBrains Mono', monospace;
+  --font-sans-ui: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Sombras */
+  --shadow-deep: 0 20px 50px rgba(0, 0, 0, 0.95);
+  --shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.8);
+  --shadow-neon-red: 0 0 25px rgba(239, 68, 68, 0.5);
+  --shadow-neon-green: 0 0 20px rgba(43, 247, 156, 0.4);
+  
+  /* Transições suaves */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ====================================================
+   1. RESET E ALTURA TOTAL DO DOCUMENTO
+   ==================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000000;
+  color: var(--accent-sterile-white);
+  font-family: var(--font-sans-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container Raiz */
+#app, .game-container {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* ====================================================
+   2. VIEWPORT 16:9 RESPONSIVO PARA TODAS AS TELAS
+   ==================================================== */
+.game-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  max-width: 177.78vh; /* Proporção 16:9 (16 / 9 = 1.7778) */
+  max-height: 56.25vw;  /* Proporção 16:9 (9 / 16 = 0.5625) */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-slow);
+  z-index: 1;
+  background-color: #000000;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.95);
+}
+
+.game-screen.active {
+  opacity: 1;
+  pointer-events: all;
+  z-index: 10;
+}
+
+.game-screen.hidden {
+  display: none;
+}
+
+/* ====================================================
+   3. MENU PRINCIPAL FOTORREALISTA
+   ==================================================== */
+.menu-screen {
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.menu-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/images/scene_menu_principal.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.65) contrast(1.15);
+  z-index: 1;
+}
+
+.menu-content {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 600px;
+  width: 90%;
+  padding: 32px 40px;
+  background: linear-gradient(135deg, rgba(8, 12, 18, 0.9) 0%, rgba(3, 5, 8, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 3px solid var(--accent-hospital-green-glow);
+  border-radius: 8px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+}
+
+.game-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.institute-badge {
+  font-family: var(--font-mono-tech);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-hospital-green-glow);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.game-title {
+  font-family: var(--font-serif-title);
+  font-size: clamp(2rem, 4.5vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: 5px;
+  color: #ffffff;
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.3), 0 4px 15px rgba(0, 0, 0, 0.9);
+}
+
+.game-subtitle {
+  font-family: var(--font-sans-ui);
+  font-size: 0.92rem;
+  font-style: italic;
+  color: var(--accent-muted-gray);
+  letter-spacing: 1px;
+}
+
+.menu-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.menu-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 14px;
+  font-family: var(--font-mono-tech);
+  font-size: 0.65rem;
+  color: var(--accent-muted-gray);
+  letter-spacing: 1px;
+}
+
+.clock-accent {
+  color: var(--alert-red);
+}
+
+/* ====================================================
+   4. DISTRIBUIÇÃO DA TELA DE GAMEPLAY (HUD, CENÁRIO, INVENTÁRIO)
+   ==================================================== */
+.gameplay-screen {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  max-width: 177.78vh;
+  max-height: 56.25vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  background-color: #000000;
+}
+
+/* Área Central Interativa do Cenário */
+.scene-viewport {
+  flex: 1 1 auto;
+  width: 100%;
+  height: calc(100% - 140px);
+  position: relative;
+  overflow: hidden;
+  background-color: #020305;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: crosshair;
+}
+
+.scene-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  overflow: hidden;
+  background: #020305;
+}
+
+/* ====================================================
+   5. CAMADAS DE PÓS-PROCESSAMENTO DE TELA
+   ==================================================== */
+.screen-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.effect-crt-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.3) 50%
+  );
+  background-size: 100% 4px;
+  opacity: 0.45;
+}
+
+.effect-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    transparent 50%,
+    rgba(2, 4, 6, 0.6) 80%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+}
+
+.effect-grain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  animation: grainFlicker 0.2s steps(4) infinite;
+}
+
+@keyframes grainFlicker {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 2%); }
+  50% { transform: translate(2%, -2%); }
+  75% { transform: translate(-1%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+.effect-glitch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(239, 68, 68, 0.15);
+  mix-blend-mode: color-dodge;
+  transition: opacity 0.05s ease;
+}
+
+.effect-glitch.active {
+  opacity: 1;
+  animation: screenShake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes screenShake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+  40%, 60% { transform: translate3d(5px, 0, 0); }
+}
+
+.effect-flash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease-out;
+}
+
+.effect-flash.flash-white {
+  opacity: 0.85;
+  transition: opacity 0.05s ease-in;
+}
+
+.effect-flash.blackout {
+  background-color: #000000;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}

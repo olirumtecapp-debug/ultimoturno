@@ -1,0 +1,479 @@
+/* ====================================================
+   O ÚLTIMO TURNO — SISTEMA DE INVENTÁRIO & INSPEÇÃO 3D
+   ==================================================== */
+
+/* Barra de Inventário Inferior Rápida */
+.quick-inventory-bar {
+  position: relative;
+  z-index: 50;
+  flex: 0 0 88px;
+  width: 100%;
+  height: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(0deg, rgba(8, 12, 16, 0.98) 0%, rgba(13, 17, 23, 0.92) 100%);
+  border-top: 1px solid var(--accent-dark-border);
+  padding: 4px 20px 6px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.inventory-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.inventory-bar-title {
+  font-family: var(--font-mono-tech);
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: var(--accent-muted-gray);
+  text-transform: uppercase;
+}
+
+.selected-item-name {
+  font-family: var(--font-mono-tech);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-hospital-green-glow);
+  letter-spacing: 1px;
+}
+
+/* Grade de Slots de Inventário */
+.inventory-slots {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #2b394a #0d1117;
+}
+
+.inventory-slots::-webkit-scrollbar {
+  height: 4px;
+}
+
+.inventory-slots::-webkit-scrollbar-thumb {
+  background: #2b394a;
+  border-radius: 2px;
+}
+
+.inventory-slot {
+  flex: 0 0 72px;
+  height: 72px;
+  background: #11161f;
+  border: 1px solid #232d3a;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.inventory-slot:hover:not(.empty) {
+  border-color: #485b73;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.inventory-slot.selected {
+  border-color: var(--accent-hospital-green-glow);
+  background: #132220;
+  box-shadow: 0 0 12px rgba(43, 247, 156, 0.3), inset 0 0 8px rgba(43, 247, 156, 0.2);
+}
+
+.inventory-slot.empty {
+  cursor: default;
+  opacity: 0.3;
+  border-style: dashed;
+}
+
+.slot-item-icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.slot-item-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.slot-item-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.slot-item-name-tag {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  font-family: var(--font-mono-tech);
+  font-size: 0.55rem;
+  color: #8b949e;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ====================================================
+   MODAL DE INSPEÇÃO DETALHADA / 3D DE OBJETOS
+   ==================================================== */
+.inspect-card {
+  width: 90%;
+  max-width: 760px;
+}
+
+.inspect-content {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  padding: 24px;
+}
+
+.inspect-visual-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.inspect-item-visual {
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle at center, #1e2633 0%, #090d12 80%);
+  border: 1px solid #2b394a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 800px;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 10px 30px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.inspect-3d-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inspect-3d-wrapper.flipped {
+  transform: rotateY(180deg);
+}
+
+.inspect-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.inspect-face.face-back {
+  transform: rotateY(180deg);
+  background: #111722;
+  border-radius: 6px;
+}
+
+.inspect-back-note {
+  font-family: var(--font-mono-tech);
+  font-size: 0.85rem;
+  color: var(--alert-red);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 0 0 8px var(--alert-red-glow);
+  padding: 15px;
+  border: 1px dashed var(--alert-red);
+  border-radius: 4px;
+}
+
+.inspect-controls {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.inspect-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inspect-name {
+  font-family: var(--font-serif-title);
+  font-size: 1.4rem;
+  letter-spacing: 1.5px;
+  color: var(--accent-sterile-white);
+}
+
+.inspect-tag {
+  font-family: var(--font-mono-tech);
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: var(--accent-hospital-green-glow);
+  border: 1px solid rgba(43, 247, 156, 0.3);
+  padding: 2px 10px;
+  border-radius: 12px;
+  width: fit-content;
+  background: rgba(26, 51, 40, 0.4);
+}
+
+.inspect-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #c9d1d9;
+}
+
+.inspect-extra-details {
+  margin-top: 8px;
+  background: #090c10;
+  border: 1px solid #232c38;
+  padding: 12px;
+  border-radius: 4px;
+  font-family: var(--font-mono-tech);
+  font-size: 0.8rem;
+  color: #8b949e;
+  line-height: 1.5;
+}
+
+/* ====================================================
+   MODAL DO DIÁRIO / ARQUIVOS & GRAVAÇÕES
+   ==================================================== */
+.journal-card {
+  width: 90%;
+  max-width: 880px;
+  height: 80vh;
+}
+
+.journal-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  height: calc(100% - 60px);
+  overflow: hidden;
+}
+
+.journal-sidebar {
+  background: #0d1117;
+  border-right: 1px solid var(--accent-dark-border);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 10px;
+  gap: 8px;
+}
+
+.journal-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 10px 14px;
+  border-radius: 4px;
+  color: var(--accent-muted-gray);
+  font-family: var(--font-mono-tech);
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.journal-tab-btn:hover {
+  background: #161b22;
+  color: var(--accent-sterile-white);
+}
+
+.journal-tab-btn.active {
+  background: #1f2733;
+  color: var(--accent-hospital-green-glow);
+  border-color: #2e3d4f;
+}
+
+.journal-view-area {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100%;
+  overflow: hidden;
+}
+
+.journal-content-list {
+  border-right: 1px solid var(--accent-dark-border);
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.journal-item-entry {
+  background: #11161f;
+  border: 1px solid #232c38;
+  padding: 10px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.journal-item-entry:hover {
+  border-color: #41536b;
+  transform: translateX(3px);
+}
+
+.journal-item-entry.selected {
+  border-color: var(--accent-hospital-green-glow);
+  background: #14221f;
+}
+
+.journal-entry-title {
+  font-family: var(--font-mono-tech);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-sterile-white);
+  margin-bottom: 2px;
+}
+
+.journal-entry-date {
+  font-family: var(--font-mono-tech);
+  font-size: 0.65rem;
+  color: #8b949e;
+}
+
+.journal-reader {
+  padding: 24px;
+  overflow-y: auto;
+  background: #090c10;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-selection-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--accent-muted-gray);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.document-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #0e131a;
+  border: 1px solid #232d3b;
+  padding: 24px;
+  border-radius: 6px;
+  font-family: var(--font-mono-tech);
+}
+
+.doc-stamp {
+  align-self: flex-end;
+  color: var(--alert-red);
+  border: 2px solid var(--alert-red);
+  padding: 2px 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transform: rotate(-4deg);
+}
+
+.doc-title {
+  font-size: 1.1rem;
+  color: var(--accent-sterile-white);
+  border-bottom: 1px solid #232d3b;
+  padding-bottom: 8px;
+}
+
+.doc-body {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: #c9d1d9;
+  white-space: pre-line;
+}
+
+/* Player de Fita Cassete no Diário */
+.tape-player-widget {
+  background: #121820;
+  border: 2px solid #2b394a;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cassette-visual-deck {
+  width: 100%;
+  height: 120px;
+  background: #07090c;
+  border: 2px solid #1f2733;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 40px;
+  position: relative;
+}
+
+.cassette-reel {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 3px solid #334155;
+  background: radial-gradient(circle, #0f172a 40%, #1e293b 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cassette-reel::after {
+  content: '⚙️';
+  font-size: 1.2rem;
+}
+
+.cassette-visual-deck.playing .cassette-reel {
+  animation: spinReel 2s linear infinite;
+}
+
+@keyframes spinReel {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.tape-transcript {
+  background: #080b0f;
+  border: 1px solid #1f2733;
+  padding: 16px;
+  border-radius: 4px;
+  font-family: var(--font-sans-ui);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+}

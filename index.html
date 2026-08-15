@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>O ÚLTIMO TURNO — Escape Room Narrativo</title>
+  <meta name="description" content="O ÚLTIMO TURNO — Algumas memórias deveriam permanecer esquecidas. Um jogo de suspense psicológico, exploração e resolução de enigmas no Instituto Aurora.">
+  
+  <!-- Fontes Google para estética industrial e terminal vintage -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,400&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Estilos do Jogo -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/ui.css">
+  <link rel="stylesheet" href="css/inventory.css">
+  <link rel="stylesheet" href="css/scenes.css">
+  <link rel="stylesheet" href="css/puzzles.css">
+</head>
+<body class="theme-dark">
+
+  <!-- Camadas Globais de Efeitos de Tela -->
+  <div id="screen-effects" class="screen-effects">
+    <div class="effect-crt-scanlines" aria-hidden="true"></div>
+    <div class="effect-vignette" aria-hidden="true"></div>
+    <div class="effect-grain" aria-hidden="true"></div>
+    <div id="effect-glitch" class="effect-glitch" aria-hidden="true"></div>
+    <div id="effect-flash" class="effect-flash" aria-hidden="true"></div>
+    <div id="dust-particles" class="dust-particles" aria-hidden="true"></div>
+  </div>
+
+  <!-- CONTAINER PRINCIPAL DO APLICATIVO -->
+  <main id="app" class="game-container">
+
+    <!-- ====================================================
+         1. MENU PRINCIPAL CINEMATOGRÁFICO
+         ==================================================== -->
+    <section id="main-menu" class="game-screen menu-screen active">
+      <!-- Cenário de fundo fotorrealista do menu -->
+      <div class="menu-backdrop" aria-hidden="true"></div>
+
+      <!-- Conteúdo do Menu e Logotipo -->
+      <div class="menu-content">
+        <header class="game-header">
+          <div class="institute-badge">INSTITUTO AURORA • PESQUISA NEUROCOGNITIVA</div>
+          <h1 class="game-title">O ÚLTIMO TURNO</h1>
+          <p class="game-subtitle">"Algumas memórias deveriam permanecer esquecidas."</p>
+        </header>
+
+        <nav class="menu-nav" aria-label="Menu Principal">
+          <button id="btn-new-game" class="retro-btn btn-primary">
+            <span class="btn-led"></span>
+            <span class="btn-text">INICIAR TURNO</span>
+          </button>
+          <button id="btn-continue" class="retro-btn btn-secondary" disabled>
+            <span class="btn-led"></span>
+            <span class="btn-text">CONTINUAR TURNO</span>
+            <small id="continue-chapter-info" class="btn-subtext">NENHUM REGISTRO</small>
+          </button>
+          <button id="btn-chapter-select" class="retro-btn btn-secondary">
+            <span class="btn-led"></span>
+            <span class="btn-text">SELEÇÃO DE CAPÍTULOS</span>
+          </button>
+          <button id="btn-options" class="retro-btn btn-secondary">
+            <span class="btn-led"></span>
+            <span class="btn-text">CONFIGURAÇÕES</span>
+          </button>
+          <button id="btn-credits" class="retro-btn btn-secondary">
+            <span class="btn-led"></span>
+            <span class="btn-text">ARQUIVOS & CRÉDITOS</span>
+          </button>
+        </nav>
+
+        <footer class="menu-footer">
+          <span>PROTOCOLO DE CONFINAMENTO: ATIVO</span>
+          <span class="status-time">ESTAÇÃO 05 • HORA: <strong class="clock-accent">02:17:00</strong></span>
+        </footer>
+      </div>
+    </section>
+
+    <!-- ====================================================
+         2. TELA DO JOGO (GAMEPLAY & EXPLORAÇÃO)
+         ==================================================== -->
+    <section id="gameplay-screen" class="game-screen gameplay-screen">
+      
+      <!-- TOP HUD: Cabeçalho com informações da sala e botões rápidos -->
+      <header id="game-hud" class="game-hud">
+        <div class="hud-left">
+          <div class="chapter-indicator">
+            <span class="hud-label">SITUAÇÃO</span>
+            <span id="current-chapter-title" class="hud-value">CAPÍTULO 1 — O DESPERTAR</span>
+          </div>
+          <div class="location-indicator">
+            <span class="hud-label">LOCAL</span>
+            <span id="current-room-name" class="hud-value">SALA DE OBSERVAÇÃO</span>
+          </div>
+        </div>
+
+        <div class="hud-center">
+          <div class="time-readout">
+            <span class="clock-icon">⏱</span>
+            <span id="hud-clock" class="hud-clock">02:17</span>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <button id="btn-hud-flashlight" class="retro-btn btn-hud" title="Alternar Lanterna (F)">
+            <span class="btn-icon">🔦</span>
+            <span class="btn-text">LANTERNA</span>
+          </button>
+          <button id="btn-hud-hints" class="retro-btn btn-hud" title="Solicitar Pista">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">PISTAS</span>
+            <span id="hints-badge" class="badge-dot"></span>
+          </button>
+          <button id="btn-hud-journal" class="retro-btn btn-hud" title="Diário de Evidências">
+            <span class="btn-icon">📁</span>
+            <span class="btn-text">ARQUIVOS</span>
+          </button>
+          <button id="btn-hud-inventory" class="retro-btn btn-hud" title="Abrir Inventário (I)">
+            <span class="btn-icon">🎒</span>
+            <span class="btn-text">ITENS</span>
+            <span id="inventory-count" class="count-badge">0</span>
+          </button>
+          <button id="btn-hud-pause" class="retro-btn btn-hud" title="Pausar Jogo (ESC)">
+            <span class="btn-icon">⚙️</span>
+            <span class="btn-text">PAUSA</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEWPORT PRINCIPAL DA CENA (Cenários e Puzzles) -->
+      <div id="scene-viewport" class="scene-viewport">
+        <!-- Container dinâmico onde as salas e câmeras são renderizadas -->
+        <div id="scene-stage" class="scene-stage"></div>
+
+        <!-- Indicador de interação / cursor especial -->
+        <div id="interaction-cursor" class="interaction-cursor" aria-hidden="true"></div>
+
+        <!-- Mensagem de observação flutuante rápida -->
+        <div id="toast-message" class="toast-message" aria-live="polite"></div>
+      </div>
+
+      <!-- BARRA CENTRAL DE AÇÃO / PROMPT DE INTERAÇÃO GLOBAL -->
+      <div id="action-prompt" class="action-prompt" role="status" aria-live="polite">
+        <span id="action-prompt-text" class="action-prompt-text">INTERAGIR</span>
+      </div>
+
+      <!-- INVENTÁRIO INFERIOR (Dock Rápido) -->
+      <div id="quick-inventory-bar" class="quick-inventory-bar">
+        <div class="inventory-bar-header">
+          <span class="inventory-bar-title">INVENTÁRIO DO PESQUISADOR</span>
+          <span id="selected-item-name" class="selected-item-name">Nenhum item selecionado</span>
+        </div>
+        <div id="inventory-slots" class="inventory-slots" role="region" aria-label="Itens coletados">
+          <!-- Slots dinâmicos preenchidos via JavaScript -->
+        </div>
+      </div>
+
+      <!-- CAIXA DE DIÁLOGO CINEMATOGRÁFICA -->
+      <div id="dialogue-box" class="dialogue-box hidden" role="region" aria-label="Diálogo">
+        <div class="dialogue-avatar-container">
+          <div id="dialogue-avatar" class="dialogue-avatar speaker-protagonist"></div>
+          <div class="audio-wave-anim">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="dialogue-body">
+          <div class="dialogue-header">
+            <span id="dialogue-speaker" class="dialogue-speaker">PROTAGONISTA</span>
+            <span class="dialogue-channel" id="dialogue-channel">COMUNICAÇÃO LOCAL</span>
+          </div>
+          <p id="dialogue-text" class="dialogue-text"></p>
+          <div class="dialogue-actions">
+            <button id="btn-dialogue-skip" class="retro-btn btn-mini">PULAR</button>
+            <button id="btn-dialogue-next" class="retro-btn btn-mini btn-primary">CONTINUAR [ESPAÇO]</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ====================================================
+         3. MODAIS & PAINEIS INTERATIVOS
+         ==================================================== -->
+
+    <!-- MODAL DE INSPEÇÃO 3D / ZOOM DE ITEM -->
+    <div id="modal-item-inspect" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="inspect-item-title">
+      <div class="modal-card inspect-card">
+        <header class="modal-header">
+          <h2 id="inspect-item-title" class="modal-title">EXAMINAR OBJETO</h2>
+          <button id="btn-close-inspect" class="btn-close" aria-label="Fechar exame">✕</button>
+        </header>
+        <div class="inspect-content">
+          <div class="inspect-visual-box">
+            <div id="inspect-item-visual" class="inspect-item-visual"></div>
+            <div class="inspect-controls">
+              <button id="btn-inspect-flip" class="retro-btn btn-sm">
+                <span>🔄 VIRAR / VER VERSO</span>
+              </button>
+              <button id="btn-inspect-use" class="retro-btn btn-sm btn-primary">
+                <span>⚡ USAR ITEM</span>
+              </button>
+            </div>
+          </div>
+          <div class="inspect-info">
+            <h3 id="inspect-item-name" class="inspect-name">NOME DO ITEM</h3>
+            <div class="inspect-tag" id="inspect-item-type">DOCUMENTO PESSOAL</div>
+            <p id="inspect-item-desc" class="inspect-desc"></p>
+            <div id="inspect-extra-details" class="inspect-extra-details"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DO DIÁRIO DE ARQUIVOS, FITAS E DOCUMENTOS -->
+    <div id="modal-journal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="journal-title">
+      <div class="modal-card journal-card">
+        <header class="modal-header">
+          <h2 id="journal-title" class="modal-title">ARQUIVOS & GRAVAÇÕES DO INSTITUTO AURORA</h2>
+          <button id="btn-close-journal" class="btn-close" aria-label="Fechar diário">✕</button>
+        </header>
+        <div class="journal-layout">
+          <!-- Abas laterais -->
+          <aside class="journal-sidebar">
+            <button class="journal-tab-btn active" data-tab="documents">
+              <span>📄 Documentos (<span id="count-docs">0</span>)</span>
+            </button>
+            <button class="journal-tab-btn" data-tab="tapes">
+              <span>📼 Fitas de Áudio (<span id="count-tapes">0</span>)</span>
+            </button>
+            <button class="journal-tab-btn" data-tab="photos">
+              <span>📷 Fotografias (<span id="count-photos">0</span>)</span>
+            </button>
+            <button class="journal-tab-btn" data-tab="notes">
+              <span>📝 Anotações do Sujeito</span>
+            </button>
+          </aside>
+          <!-- Conteúdo da aba -->
+          <div class="journal-view-area">
+            <div id="journal-content-list" class="journal-content-list"></div>
+            <div id="journal-reader" class="journal-reader">
+              <div class="empty-selection-placeholder">
+                <p>Selecione um arquivo ou gravação para examinar os detalhes.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE PISTAS (SISTEMA DE 3 NÍVEIS) -->
+    <div id="modal-hints" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="hints-title">
+      <div class="modal-card hints-card">
+        <header class="modal-header">
+          <h2 id="hints-title" class="modal-title">SISTEMA DE AUXÍLIO INVESTIGATIVO</h2>
+          <button id="btn-close-hints" class="btn-close" aria-label="Fechar pistas">✕</button>
+        </header>
+        <div class="hints-body">
+          <p class="hints-intro">
+            O protocolo de memória permite acessar fragmentos de percepção anterior. As pistas progridem em três níveis de profundidade:
+          </p>
+
+          <div class="hints-accordion">
+            <!-- Nível 1 -->
+            <div class="hint-tier-box" id="hint-tier-1">
+              <div class="hint-tier-header">
+                <span class="hint-tier-tag">NÍVEL 1 — PERCEPÇÃO</span>
+                <span class="hint-tier-status" id="status-hint-1">DISPONÍVEL</span>
+              </div>
+              <p class="hint-tier-text" id="text-hint-1">Clique para revelar uma observação sutil do ambiente.</p>
+              <button class="retro-btn btn-sm" id="btn-unlock-hint-1">REVELAR PISTA 1</button>
+            </div>
+
+            <!-- Nível 2 -->
+            <div class="hint-tier-box locked" id="hint-tier-2">
+              <div class="hint-tier-header">
+                <span class="hint-tier-tag">NÍVEL 2 — DEDUÇÃO</span>
+                <span class="hint-tier-status" id="status-hint-2">BLOQUEADO</span>
+              </div>
+              <p class="hint-tier-text" id="text-hint-2">Requer acesso ao Nível 1. Aponta o documento ou mecanismo chave.</p>
+              <button class="retro-btn btn-sm" id="btn-unlock-hint-2" disabled>REVELAR PISTA 2</button>
+            </div>
+
+            <!-- Nível 3 -->
+            <div class="hint-tier-box locked" id="hint-tier-3">
+              <div class="hint-tier-header">
+                <span class="hint-tier-tag">NÍVEL 3 — RESOLUÇÃO</span>
+                <span class="hint-tier-status" id="status-hint-3">BLOQUEADO</span>
+              </div>
+              <p class="hint-tier-text" id="text-hint-3">Requer acesso ao Nível 2. Explica detalhadamente o enigma.</p>
+              <button class="retro-btn btn-sm" id="btn-unlock-hint-3" disabled>REVELAR PISTA 3</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE OPÇÕES & ÁUDIO -->
+    <div id="modal-options" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="options-title">
+      <div class="modal-card options-card">
+        <header class="modal-header">
+          <h2 id="options-title" class="modal-title">CONFIGURAÇÕES DO SISTEMA</h2>
+          <button id="btn-close-options" class="btn-close" aria-label="Fechar opções">✕</button>
+        </header>
+        <div class="options-body">
+          <div class="option-group">
+            <label for="slider-master-volume">VOLUME PRINCIPAL</label>
+            <div class="slider-wrapper">
+              <input type="range" id="slider-master-volume" min="0" max="100" value="80">
+              <span id="label-master-volume">80%</span>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <label for="slider-sfx-volume">EFEITOS TÁTEIS & MECÂNICOS</label>
+            <div class="slider-wrapper">
+              <input type="range" id="slider-sfx-volume" min="0" max="100" value="90">
+              <span id="label-sfx-volume">90%</span>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <label for="slider-ambience-volume">AMBIÊNCIA & SUSPENSE</label>
+            <div class="slider-wrapper">
+              <input type="range" id="slider-ambience-volume" min="0" max="100" value="70">
+              <span id="label-ambience-volume">70%</span>
+            </div>
+          </div>
+
+          <div class="option-group checkbox-group">
+            <label class="toggle-control">
+              <input type="checkbox" id="check-crt-effects" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-text">Efeitos de CRT, Scanlines & Granulação</span>
+            </label>
+          </div>
+
+          <div class="option-group checkbox-group">
+            <label class="toggle-control">
+              <input type="checkbox" id="check-text-speed" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-text">Efeito de Digitação nos Diálogos</span>
+            </label>
+          </div>
+
+          <div class="options-actions">
+            <button id="btn-reset-save" class="retro-btn btn-danger">APAGAR PROGRESSO SALVO</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE SELEÇÃO DE CAPÍTULOS -->
+    <div id="modal-chapters" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="chapters-title">
+      <div class="modal-card chapters-card">
+        <header class="modal-header">
+          <h2 id="chapters-title" class="modal-title">REGISTRO DE CAPÍTULOS</h2>
+          <button id="btn-close-chapters" class="btn-close" aria-label="Fechar capítulos">✕</button>
+        </header>
+        <div class="chapters-grid" id="chapters-selection-grid">
+          <!-- Capítulos gerados dinamicamente com base nos desbloqueados -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE PAUSA NO JOGO -->
+    <div id="modal-pause" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="modal-card pause-card">
+        <div class="pause-header">
+          <span class="pause-badge">SISTEMA EM ESPERA</span>
+          <h2 class="pause-title">O ÚLTIMO TURNO</h2>
+          <p class="pause-subtitle">"O tempo não cura o que a mente recusa lembrar."</p>
+        </div>
+        <div class="pause-nav">
+          <button id="btn-pause-resume" class="retro-btn btn-primary">RETOMAR INVESTIGAÇÃO</button>
+          <button id="btn-pause-hints" class="retro-btn btn-secondary">CONSULTAR PISTAS</button>
+          <button id="btn-pause-options" class="retro-btn btn-secondary">OPÇÕES</button>
+          <button id="btn-pause-menu" class="retro-btn btn-secondary">MENU PRINCIPAL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE PUZZLE GENÉRICO (Renderizado sob demanda) -->
+    <div id="modal-puzzle-view" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="modal-card puzzle-card">
+        <header class="modal-header">
+          <h2 id="puzzle-title" class="modal-title">DISPOSITIVO INTERATIVO</h2>
+          <button id="btn-close-puzzle" class="btn-close" aria-label="Fechar dispositivo">✕</button>
+        </header>
+        <div id="puzzle-interactive-container" class="puzzle-interactive-container">
+          <!-- Conteúdo do quebra-cabeça injetado dinamicamente -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         4. TELAS DE ENCERRAMENTO (3 FINAIS CINEMATOGRÁFICOS)
+         ==================================================== -->
+    <section id="ending-screen" class="game-screen ending-screen hidden">
+      <div class="ending-backdrop"></div>
+      <div class="ending-content">
+        <div class="ending-badge" id="ending-badge">FINAL ALCANÇADO</div>
+        <h1 class="ending-title" id="ending-title">FINAL 1 — A FUGA</h1>
+        <div class="ending-text" id="ending-narrative"></div>
+        
+        <div class="ending-stats">
+          <div class="stat-item">
+            <span class="stat-label">CAPÍTULOS CONCLUÍDOS</span>
+            <span class="stat-value" id="stat-chapters">8 / 8</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">DOCUMENTOS REUNIDOS</span>
+            <span class="stat-value" id="stat-docs">12 / 12</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">GRAVAÇÕES ENCONTRADAS</span>
+            <span class="stat-value" id="stat-tapes">6 / 6</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">PISTAS UTILIZADAS</span>
+            <span class="stat-value" id="stat-hints">0</span>
+          </div>
+        </div>
+
+        <div class="ending-actions">
+          <button id="btn-ending-menu" class="retro-btn btn-primary">RETORNAR AO MENU PRINCIPAL</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SCRIPTS DO JOGO (Estrutura Modular Vanilla) -->
+  <script src="js/audio.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/narrative.js"></script>
+  <script src="js/lighting-engine.js"></script>
+  <script src="js/room-renderer.js"></script>
+  <script src="js/inventory.js"></script>
+  <script src="js/scene-manager.js"></script>
+  <script src="js/puzzles.js"></script>
+  <script src="js/hints.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
