@@ -29,10 +29,23 @@ class SceneManager {
 
   initEventListeners() {
     if (this.btnDialogueNext) {
-      this.btnDialogueNext.addEventListener('click', () => this.advanceDialogue());
+      this.btnDialogueNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.advanceDialogue();
+      });
     }
     if (this.btnDialogueSkip) {
-      this.btnDialogueSkip.addEventListener('click', () => this.finishDialogue());
+      this.btnDialogueSkip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.finishDialogue();
+      });
+    }
+    if (this.dialogueBox) {
+      this.dialogueBox.addEventListener('click', (e) => {
+        if (e.target !== this.btnDialogueSkip && !this.btnDialogueSkip?.contains(e.target)) {
+          this.advanceDialogue();
+        }
+      });
     }
 
     window.addEventListener('keydown', (e) => {

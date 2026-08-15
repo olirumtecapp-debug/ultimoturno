@@ -394,7 +394,7 @@ class PuzzleSystem {
           soundEngine.playTapeDeckClick();
           isPlaying = !isPlaying;
           if (isPlaying) {
-            soundEngine.playVoice(currentTape.audio, currentTape.transcript, 'radio', () => {
+            soundEngine.playVoice(currentTape.audio, null, 'radio', () => {
               isPlaying = false;
               renderPlayer();
             });
@@ -572,7 +572,7 @@ class PuzzleSystem {
     if (endingNarrative) endingNarrative.innerHTML = endingData.text.replace(/\n/g, '<br>');
 
     // Toca a narração dramática do epílogo final
-    soundEngine.playVoice(endingData.audio, endingData.text, 'radio');
+    soundEngine.playVoice(endingData.audio, null, 'radio');
 
     // Estatísticas
     const statHints = document.getElementById('stat-hints');

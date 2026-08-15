@@ -101,7 +101,6 @@ class SoundEngine {
     try {
       console.log(`[Audio] Carregando gravação diegética: ${cleanPath}`);
       const audio = new Audio(cleanPath);
-      audio.crossOrigin = "anonymous";
       audio.preload = "auto";
       this.currentVoiceAudio = audio;
 
