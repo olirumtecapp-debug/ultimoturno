@@ -456,6 +456,42 @@ class SoundEngine {
     } catch (e) {}
   }
 
+  // Estouro de lâmpada ao restaurar o quadro de força (Cap 2)
+  playLightBulbBurst() {
+    if (!this.ctx || this.ctx.state !== 'running') return;
+    try {
+      const now = this.ctx.currentTime;
+
+      // Faísca / click elétrico inicial
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.08);
+      const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1);
+
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = noiseBuffer;
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.5, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      noise.connect(noiseGain);
+      noiseGain.connect(this.sfxGain);
+      noise.start(now);
+
+      // Tom grave de estalo de filamento
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(120, now + 0.05);
+      osc.frequency.exponentialRampToValueAtTime(25, now + 0.4);
+      gain.gain.setValueAtTime(0.35, now + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(now + 0.05);
+      osc.stop(now + 0.4);
+    } catch (e) {}
+  }
+
   playHeartbeat() {
     if (!this.ctx || this.ctx.state !== 'running') return;
     try {

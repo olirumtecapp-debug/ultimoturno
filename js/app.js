@@ -73,11 +73,8 @@ class AppController {
   }
 
   setupEventListeners() {
-    // Inicialização do áudio no primeiro clique do usuário
-    document.addEventListener('click', () => {
-      soundEngine.init();
-      soundEngine.resume();
-    }, { once: true });
+    // O desbloqueio do AudioContext é gerenciado globalmente em audio.js.
+    // Não duplicar o listener aqui para evitar conflito com o unlock global.
 
     // Menu Principal
     if (this.btnNewGame) {
@@ -313,7 +310,6 @@ class AppController {
     soundEngine.playButtonClick();
     gameState.state = gameState.getDefaultState();
     gameState.saveToStorage();
-
     this.transitionToGameplay();
   }
 
@@ -322,7 +318,6 @@ class AppController {
     soundEngine.resume();
     soundEngine.playButtonClick();
     gameState.loadFromStorage();
-
     this.transitionToGameplay();
   }
 

@@ -143,6 +143,8 @@ class PuzzleSystem {
   // Combinação correta: ON - OFF - ON - ON - OFF
   // ==========================================
   openBreakerPuzzle() {
+    soundEngine.init();
+    soundEngine.resume();
     if (this.puzzleTitle) this.puzzleTitle.textContent = 'QUADRO DE DISTRIBUIÇÃO DE ENERGIA — SETOR B';
 
     let switches = [false, false, false, false, false];

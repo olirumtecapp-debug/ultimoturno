@@ -444,7 +444,7 @@ class SceneManager {
   // EVENTOS DO CAPÍTULO 7
   // ==========================================
   bindChapter7Events() {
-    const hsDossier = document.getElementById('hs-cap7-dossier');
+    const hsDossier = document.getElementById('hs-cap7-projector-screen');
     if (hsDossier) {
       hsDossier.addEventListener('click', () => {
         soundEngine.playButtonClick();
@@ -527,8 +527,11 @@ class SceneManager {
 
     if (this.dialogueSpeaker) this.dialogueSpeaker.textContent = line.speaker;
 
-    // Dispara a voz dublada (arquivo MP3 com fallback TTS em pt-BR)
-    soundEngine.playVoice(line.audio, line.text, line.type);
+    // Dispara exclusivamente o arquivo MP3 diegético (sem TTS / speechSynthesis)
+    // Se o arquivo falhar, apenas o texto aparece com efeito de digitação na tela.
+    if (line.audio) {
+      soundEngine.playVoice(line.audio, null, line.type);
+    }
 
     if (this.dialogueText) {
       this.dialogueText.textContent = '';
